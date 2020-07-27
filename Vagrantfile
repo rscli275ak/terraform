@@ -11,33 +11,40 @@ Vagrant.configure(2) do |config|
     sudo systemctl restart sshd
     SHELL
   
-      config.vm.define "terraform" do |control|
-        control.vm.hostname = "terraform"
-        control.vm.box = "ubuntu/bionic64"
-        control.vm.box_url = "ubuntu/bionic64"
-        control.vm.network "private_network", ip: "192.168.21.102"
-        control.vm.provider "virtualbox" do |v|
-            v.customize [ "modifyvm", :id, "--cpus", "1" ]
-            v.customize [ "modifyvm", :id, "--memory", "1024" ]
-            v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-            v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-            v.customize ["modifyvm", :id, "--name", "terraform"]
-        end
-        control.vm.provision :shell, :inline => common
+    terraform_inst = <<-SHELL
+    wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+    sudo unzip terraform_0.12.24_linux_amd64.zip  -d /usr/local/bin/
+    sudo chmod 755 /usr/local/bin/terraform
+    SHELL
+
+    config.vm.define "terraform" do |control|
+      control.vm.hostname = "terraform"
+      control.vm.box = "ubuntu/bionic64"
+      control.vm.box_url = "ubuntu/bionic64"
+      control.vm.network "private_network", ip: "192.168.21.102"
+      control.vm.provider "virtualbox" do |v|
+          v.customize [ "modifyvm", :id, "--cpus", "1" ]
+          v.customize [ "modifyvm", :id, "--memory", "1024" ]
+          v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+          v.customize ["modifyvm", :id, "--name", "terraform"]
       end
+      control.vm.provision :shell, :inline => common
+      control.vm.provision :shell, :inline => terraform_inst
+    end
   
-      config.vm.define "target" do |control|
-        control.vm.hostname = "target"
-        control.vm.box = "ubuntu/bionic64"
-        control.vm.box_url = "ubuntu/bionic64"
-        control.vm.network "private_network", ip: "192.168.21.103"
-        control.vm.provider "virtualbox" do |v|
-            v.customize [ "modifyvm", :id, "--cpus", "1" ]
-            v.customize [ "modifyvm", :id, "--memory", "1024" ]
-            v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-            v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-            v.customize ["modifyvm", :id, "--name", "target"]
-        end
-          #control.vm.provision :shell, :inline => common
+    config.vm.define "target" do |control|
+      control.vm.hostname = "target"
+      control.vm.box = "ubuntu/bionic64"
+      control.vm.box_url = "ubuntu/bionic64"
+      control.vm.network "private_network", ip: "192.168.21.103"
+      control.vm.provider "virtualbox" do |v|
+          v.customize [ "modifyvm", :id, "--cpus", "1" ]
+          v.customize [ "modifyvm", :id, "--memory", "1024" ]
+          v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+          v.customize ["modifyvm", :id, "--name", "target"]
       end
+        #control.vm.provision :shell, :inline => common
+    end
   end
