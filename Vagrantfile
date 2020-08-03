@@ -1,12 +1,12 @@
 Vagrant.configure(2) do |config|
     common = <<-SHELL
-    sudo apt install wget unzip
-    sudo echo "autocmd filetype yaml setlocal ai ts=2 sw=2 et" > /home/vagrant/.vimrc
-    sudo echo "alias python=/usr/bin/python3" >> /home/vagrant/.bashrc
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
+    sudo apt-get update -qq && apt-get install -y -qq wget unzip 2>&1 >/dev/null
+    curl -fsSL https://get.docker.com -o get-docker.sh 2>&1 >/dev/null
+    sudo sh get-docker.sh 2>&1 >/dev/null
     sudo usermod -aG docker vagrant
     sudo service docker start
+    sudo echo "autocmd filetype yaml setlocal ai ts=2 sw=2 et" > /home/vagrant/.vimrc
+    sudo echo "alias python=/usr/bin/python3" >> /home/vagrant/.bashrc
     sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config
     sudo systemctl restart sshd
     SHELL
@@ -31,6 +31,7 @@ Vagrant.configure(2) do |config|
       end
       control.vm.provision :shell, :inline => common
       control.vm.provision :shell, :inline => terraform_inst
+      control.vm.synced_folder "share/", "/home/vagrant/share"
     end
   
     config.vm.define "target" do |control|

@@ -1,2 +1,6 @@
 .vagrant
 *.log
+*.tfstate
+.terraform
+*.txt
+*.backup
