@@ -106,6 +106,16 @@
 * Types de variables : string, list, map
 * `trigger` : vérifie les valeurs des listes
 
+* Remote-exec : local_exec distant (ssh)
+
+    1 - création de la clé ssh :
+
+        ssh-keygen -b 2048
+
+    2 - enregistrer la clé privée dans le fichier `tfvars`
+    
+    3 - copier la clé publique dans la target (`~/.ssh/id_rsa.pub`)
+
 ## Precedence ou niveaux de déclaration
 
 * Définition à plusieurs niveaux : environnement jusqu'au fichier spécifique
