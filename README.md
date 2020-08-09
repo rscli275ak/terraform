@@ -96,6 +96,7 @@
     terraform init
     terraform plan
     terraform apply [-auto-approve]
+    terraform destroy
 
 ## Local-exec && Remote-exec
 
@@ -142,3 +143,8 @@
             terraform apply -var "str=cli" -var-file varfile.tfvars
 
         -> Prend toujours l'argument le plus à gauche en priorité
+
+## Gestion des ressources docker
+
+- la déclaration d'une ressource crée l'image et le conteneur sur la machine cible (le docker provider)
+- la modification de la ressource supprime l'image et le conteneur précédents et recrée la nouvelle image ainsi que la nouvelle ressource.

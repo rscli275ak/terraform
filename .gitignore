@@ -1,4 +1,6 @@
 .vagrant
+.vscode
+.DS_Store
 *.log
 *.tfstate
 .terraform
